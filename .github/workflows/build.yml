@@ -1,9 +1,6 @@
-name: Build Windows EXE
+name: Build Launcher
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
@@ -11,25 +8,25 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.0.x'
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
 
-    - name: Restore dependencies
-      run: dotnet restore ./src/ByRKN_Launcher/ByRKN_Launcher.csproj
+      - name: Restore dependencies
+        run: dotnet restore ./ByRKN_Launcher/ByRKN_Launcher.csproj
 
-    - name: Build
-      run: dotnet build ./src/ByRKN_Launcher/ByRKN_Launcher.csproj --configuration Release
+      - name: Build
+        run: dotnet build ./ByRKN_Launcher/ByRKN_Launcher.csproj --configuration Release
 
-    - name: Publish
-      run: dotnet publish ./src/ByRKN_Launcher/ByRKN_Launcher.csproj --configuration Release --output ./output
+      - name: Publish
+        run: dotnet publish ./ByRKN_Launcher/ByRKN_Launcher.csproj --configuration Release --output publish
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: ByRKN_Launcher
-        path: ./output
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ByRKN_Launcher
+          path: publish
