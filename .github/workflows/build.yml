@@ -1,34 +1,34 @@
-name: Build Windows EXE
+name: Build ByRKN Launcher EXE
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
+      - name: 📥 Checkout
         uses: actions/checkout@v4
 
-      - name: Setup .NET
+      - name: 🧰 Setup .NET SDK
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0.x' # или замени на свою версию .NET
+          dotnet-version: '8.0.x'
 
-      - name: Restore dependencies
-        run: dotnet restore ./src/ByRKNLauncher.csproj
+      - name: 📦 Restore dependencies
+        run: dotnet restore ./src/ByRKN_Launcher/ByRKN_Launcher.csproj
 
-      - name: Build
-        run: dotnet build ./src/ByRKNLauncher.csproj --configuration Release --no-restore
+      - name: 🛠 Build project
+        run: dotnet build ./src/ByRKN_Launcher/ByRKN_Launcher.csproj --configuration Release --no-restore
 
-      - name: Publish
-        run: dotnet publish ./src/ByRKNLauncher.csproj --configuration Release --output ./output --self-contained --runtime win-x64 /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true
+      - name: 🚀 Publish self-contained .exe
+        run: dotnet publish ./src/ByRKN_Launcher/ByRKN_Launcher.csproj --configuration Release --output ./build --self-contained --runtime win-x64 /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true
 
-      - name: Upload EXE artifact
+      - name: 📤 Upload EXE Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ByRKN-Launcher
-          path: ./output
+          path: ./build
